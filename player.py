@@ -1,5 +1,4 @@
 # player.py
-from typing import Any
 import pygame
 import math
 BLACK = (0, 0, 0)
@@ -14,6 +13,7 @@ class Player(pygame.sprite.Sprite):
         self.radius = 50
         self.velocity = 3
         self.health = 100
+        self.attack_power = 10
         self.isattack = False
     
     def update(self):
@@ -27,15 +27,9 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_d]:
             self.rect.x += self.velocity
 
-    def attack(self, enemies):
-        """Player attacks enemies."""
-        # 這裡因為跟武器有關，所以到時候可能要重寫
+    def set_knife(self, knife):
+        self.knife = knife
 
-        self.isattack = True
-        for enemy in enemies:
-            # 檢測武器與敵人的碰撞
-            if self.weapon.rect.colliderect(enemy.rect):
-                # 將敵人的生命值減少（這裡假設敵人有一個 hp 屬性）
-                enemy.hp -= 10  # 假設每次攻擊造成 10 點傷害
-                if enemy.health <= 0:
-                    enemy.die(enemy)
+    def attack(self, enemies):
+        if self.knife:
+            self.knife.attack(enemies)
