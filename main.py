@@ -47,16 +47,16 @@ def draw_bar(surf, BAR_LENGTH, BAR_HEIGHT, color, outline_color, amount, max_val
 # 定義必要函式
 # 需要一個精靈跟一個類別，如果在群組中除了自己以外的東西碰到自己，這個精靈會有彈開的動作。
 def avoid_overlap(sprite, group):
-        for other_sprite in group:
-            if other_sprite != sprite and pygame.sprite.collide_circle(sprite, other_sprite):
-                if sprite.rect.centerx < other_sprite.rect.centerx:
-                    sprite.rect.x -= 1
-                else:
-                    sprite.rect.x += 1
-                if sprite.rect.centery < other_sprite.rect.centery:
-                    sprite.rect.y -= 1
-                else:
-                    sprite.rect.y += 1
+    for other_sprite in group:
+        if other_sprite != sprite and pygame.sprite.collide_circle(sprite, other_sprite):
+            if sprite.rect.centerx < other_sprite.rect.centerx:
+                sprite.rect.x -= 1
+            else:
+                sprite.rect.x += 1
+            if sprite.rect.centery < other_sprite.rect.centery:
+                sprite.rect.y -= 1
+            else:
+                sprite.rect.y += 1
 
 
 # 主畫面迴圈
@@ -129,6 +129,11 @@ def game_screen():
     if settings.first_in:
         settings.game_init()
 
+    start_time = pygame.time.get_ticks()
+    # 複製人刷新時間
+    settings.clone_refresh_time = start_time
+    settings.clone_created = False
+
     while True:
         # 設置遊戲的FPS
         clock.tick(settings.FPS)
@@ -152,10 +157,23 @@ def game_screen():
                     enemy = settings.Minion()
                     settings.enemies.add(enemy)
         
+        # 計算經過的時間
+        elapsed_time = (pygame.time.get_ticks() - settings.clone_refresh_time) / 1000  # 轉換為秒
+        if elapsed_time >= 30 and not settings.clone_created:
+            clone = settings.clone(settings.player)  
+            settings.enemies.add(clone)
+            settings.clone_created = True
+
         # 更新遊戲
         settings.all_sprites.update()
         settings.enemies.update(settings.player)
         settings.experiences.update()
+
+        # 寫上玩家的資訊
+        player_level = Text(f"LEVEL : {settings.player.level}", 20, (settings.WINDOW_WIDTH - 80, 30), settings.BLACK)
+        player_attack_power = Text(f"ATTACK : {settings.player.attack_power}", 20, (settings.WINDOW_WIDTH - 80, 60), settings.BLACK)
+        player_experiece = Text(f"{int(settings.player.experience)} / {settings.player.needed_experience}", 20, (settings.WINDOW_WIDTH/2, settings.WINDOW_HEIGHT - 10), settings.BLACK)
+        player_health = Text(f"{settings.player.health} / {settings.player.max_health}", 20, (150, 20), settings.WHITE)
 
         # 如果玩家碰到經驗值，經驗要提升，並且消失
         for experience in settings.experiences:
@@ -185,24 +203,12 @@ def game_screen():
         settings.experiences.draw(screen)
 
         # 畫血條出來(此函式在main裡)
-        draw_bar(screen, 
-                 100, 
-                 10, 
-                 settings.GREEN, 
-                 settings.WHITE, 
-                 settings.player.health, 
-                 settings.player.max_health, 
-                 5, 
-                 15)
-        draw_bar(screen, 
-                 settings.WINDOW_WIDTH, 
-                 20, 
-                 settings.YELLOW, 
-                 settings.BLACK, 
-                 settings.player.experience, 
-                 settings.player.needed_experience, 
-                 0, 
-                 settings.WINDOW_HEIGHT - 20)
+        draw_bar(screen, 100, 10, settings.GREEN, settings.WHITE, settings.player.health, settings.player.max_health, 5, 15)
+        draw_bar(screen, settings.WINDOW_WIDTH, 20, settings.YELLOW, settings.BLACK, settings.player.experience, settings.player.needed_experience, 0, settings.WINDOW_HEIGHT - 20)
+        player_level.draw(screen)
+        player_attack_power.draw(screen)
+        player_experiece.draw(screen)
+        player_health.draw(screen)
         pygame.display.update()
 
 def pause():

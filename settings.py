@@ -3,6 +3,7 @@ from player import Player
 from minion import Minion
 from boss import Boss
 from knife import Knife
+from theClone import clone
 
 # 定義顏色
 WHITE = (255, 255, 255)
@@ -16,13 +17,16 @@ INDIGO = (75, 0, 130)
 PURPLE = (128, 0, 128)
 
 # 設置視窗大小
-WINDOW_WIDTH = 1080
+WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 WINDOW_SIZE = (WINDOW_WIDTH, WINDOW_HEIGHT)
 FPS = 60
 
 # 用來讓pause回到game時不要刷新的變數
 first_in = True
+# 用來重設clone的刷新時間
+clone_refresh_time = 0
+clone_created = False
 
 # 用來存放所有的精靈類別(角色、敵人)
 all_sprites = pygame.sprite.Group()

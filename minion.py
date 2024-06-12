@@ -64,7 +64,7 @@ class Minion(pygame.sprite.Sprite):
 
     # 升級的函式
     # 將各項數值增加後改其位置使其看起來像死掉了後重生
-    # 在重生後判斷其等級決定他的強度
+    # 在重生後判斷其等級決定他的強度s
     def level_up(self):
         self.level += 1
         self.max_health += 25

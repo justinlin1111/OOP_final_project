@@ -36,11 +36,6 @@ class Knife(pygame.sprite.Sprite):
         # self.lastAngle = angle
         self.rect = self.image.get_rect(center=self.rect.center)
 
-    def swing(self):
-        """揮動刀的動作"""
-        # 在這裡實現具體的揮動動作，例如播放揮動的動畫或者執行攻擊
-        pass
-
     # 利用刀攻擊敵人，如果刀碰到敵人的話敵人會損血，
     # 並且會被擊退，同時判斷敵人的血是否歸零以移除
     # 在敵人死亡時會生成經驗值
@@ -55,7 +50,12 @@ class Knife(pygame.sprite.Sprite):
                     experience = Experience(enemy)
                     settings.experiences.add(experience)
                     # 升一等，在升一等的同時會重製它的位置
-                    enemy.level_up()
+                    if isinstance(enemy, settings.Minion) or isinstance(enemy, settings.Boss):
+                        enemy.level_up()
+                    elif isinstance(enemy, settings.clone):
+                        enemy.kill()
+                        settings.clone_refresh_time = pygame.time.get_ticks()
+                        settings.clone_created = False
 
 
     def draw(self, screen):

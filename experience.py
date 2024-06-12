@@ -11,12 +11,14 @@ class Experience(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.centerx = enemy.rect.centerx
         self.rect.centery = enemy.rect.centery
+        self.original_y  = self.rect.centery
         self.radius = 5
-        self.value = 10  # 經驗值的提升量，可以根據需要調整
+        self.value = 10 * enemy.level  # 經驗值的提升量，可以根據需要調整
         pygame.draw.circle(self.image, settings.YELLOW, (self.rect.width // 2, self.rect.height // 2), self.radius, 0) 
     
     def update(self):
         pass
+        
 
     def draw(self, screen):
         """Draw the experience on the screen."""
