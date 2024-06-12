@@ -1,10 +1,10 @@
 import pygame
 import math
+from experience import Experience
+import settings
 
 BLUE = (0, 0, 255)
 RED = (255, 0, 0)
-
-
 
 class Knife(pygame.sprite.Sprite):
     def __init__(self, player):
@@ -20,12 +20,12 @@ class Knife(pygame.sprite.Sprite):
     def update(self):
         """更新刀子的位置，使其跟隨滑鼠轉動"""
         
-        # 计算从玩家到鼠标的角度
+        # 計算从玩家到滑鼠的角度
         dx = pygame.mouse.get_pos()[0] - self.player.rect.centerx
         dy = pygame.mouse.get_pos()[1] - self.player.rect.centery
         angle = math.degrees(math.atan2(-dy, dx))  # 计算旋转角度
 
-        # 计算刀子的位置，使其位于玩家与鼠标之间的线上，并与玩家保持一定距离
+        # 計算刀子的位置，使其位于玩家與滑鼠之間的線上，並與玩家保持一定距離
         rad_angle = math.radians(angle)
         self.rect.centerx = self.player.rect.centerx + int(self.offset * math.cos(rad_angle))
         self.rect.centery = self.player.rect.centery - int(self.offset * math.sin(rad_angle))
@@ -42,6 +42,7 @@ class Knife(pygame.sprite.Sprite):
 
     # 利用刀攻擊敵人，如果刀碰到敵人的話敵人會損血，
     # 並且會被擊退，同時判斷敵人的血是否歸零以移除
+    # 在敵人死亡時會生成經驗值
     def attack(self, enemies):
         """刀子攻擊敵人"""
         for enemy in enemies:
@@ -50,6 +51,8 @@ class Knife(pygame.sprite.Sprite):
                 repel(self, enemy)
                 if enemy.health <= 0:
                     enemy.kill()
+                    experience = Experience(enemy)
+                    settings.experiences.add(experience)
 
     def draw(self, screen):
         """Draw the knife on the screen."""

@@ -1,6 +1,7 @@
 # player.py
 import pygame
-import math
+import settings
+
 BLACK = (0, 0, 0)
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -8,15 +9,23 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.Surface((50, 50))
         self.image.fill(BLACK)
         self.rect = self.image.get_rect()
-        self.rect.centerx = 540
-        self.rect.centery = 700
+        self.rect.centerx = settings.WINDOW_WIDTH / 2
+        self.rect.centery = settings.WINDOW_HEIGHT / 2
         self.radius = 50
         self.velocity = 3
         self.health = 100
+        self.max_health = 100
         self.attack_power = 10
         self.isattack = False
+
+        self.experience = 0
+        self.level = 1
+        self.needed_experience = 50
     
     def update(self):
+        # 隨著時間1秒+1點經驗
+        # 因為FPS = 60
+        self.experience += 1/60
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
             self.rect.y -= self.velocity
@@ -26,6 +35,26 @@ class Player(pygame.sprite.Sprite):
             self.rect.x -= self.velocity
         if keys[pygame.K_d]:
             self.rect.x += self.velocity
+        
+        # 避免超出螢幕
+        if (self.rect.top < 0):
+            self.rect.top = 0
+        if (self.rect.bottom > settings.WINDOW_HEIGHT - 20):
+            self.rect.bottom = settings.WINDOW_HEIGHT - 20
+        if (self.rect.left < 0):
+            self.rect.left = 0
+        if (self.rect.right > settings.WINDOW_WIDTH):
+            self.rect.right = settings.WINDOW_WIDTH
+
+        # 處理升級資訊
+        # 升級時會增加攻擊力並且回血
+        if self.experience >= self.needed_experience:
+            self.experience -= self.needed_experience
+            self.level += 1
+            self.attack_power += 3
+            self.health += 10
+            self.needed_experience += self.level * 10
+            print(f"level up! now your level is {self.level}")
 
     def set_knife(self, knife):
         self.knife = knife

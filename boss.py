@@ -1,6 +1,8 @@
 # boss.py
 import pygame
 import math
+import settings
+
 
 RED = (255, 0, 0)
 
@@ -27,6 +29,16 @@ class Boss(pygame.sprite.Sprite):
 
         self.rect.centerx += dx * self.velocity
         self.rect.centery += dy * self.velocity
+
+        # 避免超出螢幕
+        if (self.rect.top < 0):
+            self.rect.top = 0
+        if (self.rect.bottom > settings.WINDOW_HEIGHT - 20):
+            self.rect.bottom = settings.WINDOW_HEIGHT - 20
+        if (self.rect.left < 0):
+            self.rect.left = 0
+        if (self.rect.right > settings.WINDOW_WIDTH):
+            self.rect.right = settings.WINDOW_WIDTH
 
     def stayAwayFrom(self, something):
         if self.rect.colliderect(something.rect):
