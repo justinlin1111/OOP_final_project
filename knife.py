@@ -1,3 +1,4 @@
+import random
 import pygame
 import math
 from experience import Experience
@@ -50,10 +51,12 @@ class Knife(pygame.sprite.Sprite):
                 enemy.health -= self.player.attack_power
                 repel(self, enemy)
                 if enemy.health <= 0:
-                    enemy.kill()
+                    # 生成經驗值，先生成才不會因為敵人升等被移位而經驗變很遠
                     experience = Experience(enemy)
                     settings.experiences.add(experience)
-                    
+                    # 升一等，在升一等的同時會重製它的位置
+                    enemy.level_up()
+
 
     def draw(self, screen):
         """Draw the knife on the screen."""

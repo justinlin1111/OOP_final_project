@@ -11,6 +11,9 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
+ORANGE = (255, 165, 0)
+INDIGO = (75, 0, 130)
+PURPLE = (128, 0, 128)
 
 # 設置視窗大小
 WINDOW_WIDTH = 1080

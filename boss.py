@@ -1,4 +1,5 @@
 # boss.py
+import random
 import pygame
 import math
 import settings
@@ -15,6 +16,9 @@ class Boss(pygame.sprite.Sprite):
         self.rect.centery = 300
         self.radius = 40
         self.velocity = 1
+
+        self.level = 1
+        self.max_health = 150
         self.health = 150
         self.attack_power = 20
         pygame.draw.circle(self.image, settings.RED, (self.rect.width // 2, self.rect.height // 2), self.radius, 0) 
@@ -48,7 +52,45 @@ class Boss(pygame.sprite.Sprite):
             dist = max(1, (dx ** 2 + dy ** 2) ** 0.5)
             self.rect.x += dx / dist * 20  # 调整反弹力度
             self.rect.y += dy / dist * 20  # 调整反弹力度
+            
+    def level_up(self):
+        self.level += 1
+        self.max_health += 25
+        self.health = self.max_health
+        self.attack_power += 5
+        self.velocity += 0.1
 
+        if random.random() < 0.33:
+            self.rect.centerx = random.choice([0, settings.WINDOW_WIDTH])
+            self.rect.centery = random.randrange(0,settings.WINDOW_HEIGHT)
+        elif random.random() < 0.67:
+            self.rect.centerx = random.randrange(0,settings.WINDOW_WIDTH)
+            self.rect.centery = random.choice([0, settings.WINDOW_HEIGHT])
+        else:
+            self.rect.centerx = random.randrange(0,settings.WINDOW_WIDTH)
+            self.rect.centery = random.randrange(0,settings.WINDOW_HEIGHT)
+
+        # 檢查他的等級決定它的顏色
+        # 紅 ->  1 ~  3
+        # 橙 ->  4 ~  6
+        # 黃 ->  7 ~  9
+        # 綠 -> 10 ~ 12
+        # 藍 -> 13 ~ 15
+        # 靛 -> 16 ~ 18
+        # 紫 -> 19 ~ 
+        if self.level >= 19:
+            pygame.draw.circle(self.image, settings.PURPLE, (self.rect.width // 2, self.rect.height // 2), self.radius, 0)
+        elif self.level >= 16:
+            pygame.draw.circle(self.image, settings.INDIGO, (self.rect.width // 2, self.rect.height // 2), self.radius, 0)
+        elif self.level >= 13:
+            pygame.draw.circle(self.image, settings.BLUE, (self.rect.width // 2, self.rect.height // 2), self.radius, 0)
+        elif self.level >= 10:
+            pygame.draw.circle(self.image, settings.GREEN, (self.rect.width // 2, self.rect.height // 2), self.radius, 0)
+        elif self.level >= 7:
+            pygame.draw.circle(self.image, settings.YELLOW, (self.rect.width // 2, self.rect.height // 2), self.radius, 0)
+        elif self.level >= 4:
+            pygame.draw.circle(self.image, settings.ORANGE, (self.rect.width // 2, self.rect.height // 2), self.radius, 0)
+    
     def draw(self, screen):
         """Draw the experience on the screen."""
         screen.blit(self.image, self.rect)

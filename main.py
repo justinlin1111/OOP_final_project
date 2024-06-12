@@ -104,10 +104,9 @@ def game_screen():
                 if event.key == pygame.K_ESCAPE:
                     return "main_menu"
                 # 點一下滑鼠要執行攻擊
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                # 玩家攻擊
-                settings.player.attack(settings.enemies)
-                print("hit!")
+                elif event.key == pygame.K_SPACE:
+                    # 玩家攻擊
+                    settings.player.attack(settings.enemies)
             elif event.type == TIMER_EVENT_ID:
                 # 先判斷敵人數量是不是超過30
                 if len(settings.enemies) < 30:
