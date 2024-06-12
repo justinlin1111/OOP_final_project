@@ -7,7 +7,7 @@ class Experience(pygame.sprite.Sprite):
         # 創建一個透明的平面，
         # 用於get_rect()，(沒有get_rect()無法判斷碰撞)，
         # 與避免一開始生成是一個黑色矩形(default)
-        self.image = pygame.Surface((10, 10), pygame.SRCALPHA)
+        self.image = pygame.Surface((50, 50), pygame.SRCALPHA)
         self.rect = self.image.get_rect()
         self.rect.centerx = enemy.rect.centerx
         self.rect.centery = enemy.rect.centery

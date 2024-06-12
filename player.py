@@ -6,12 +6,11 @@ BLACK = (0, 0, 0)
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((50, 50))
-        self.image.fill(BLACK)
+        self.image = pygame.Surface((60, 60), pygame.SRCALPHA)
         self.rect = self.image.get_rect()
         self.rect.centerx = settings.WINDOW_WIDTH / 2
         self.rect.centery = settings.WINDOW_HEIGHT / 2
-        self.radius = 50
+        self.radius = 30
         self.velocity = 3
         self.health = 100
         self.max_health = 100
@@ -21,6 +20,7 @@ class Player(pygame.sprite.Sprite):
         self.experience = 0
         self.level = 1
         self.needed_experience = 50
+        pygame.draw.circle(self.image, settings.BLUE, (self.rect.width // 2, self.rect.height // 2), self.radius, 0) 
     
     def update(self):
         # 隨著時間1秒+1點經驗
@@ -62,3 +62,7 @@ class Player(pygame.sprite.Sprite):
     def attack(self, enemies):
         if self.knife:
             self.knife.attack(enemies)
+
+    def draw(self, screen):
+        """Draw the experience on the screen."""
+        screen.blit(self.image, self.rect)

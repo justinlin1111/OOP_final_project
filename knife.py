@@ -9,12 +9,12 @@ RED = (255, 0, 0)
 class Knife(pygame.sprite.Sprite):
     def __init__(self, player):
         pygame.sprite.Sprite.__init__(self)
-        self.original_image = pygame.Surface((100, 10), pygame.SRCALPHA)  # 创建一个透明的表面
-        pygame.draw.polygon(self.original_image, RED, [(0, 5), (90, 5), (95, 0), (100, 5), (95, 10), (90, 5), (0, 5)])
-        self.image = self.original_image
+        self.original_image = pygame.Surface((50, 10), pygame.SRCALPHA)  # 创建一个透明的表面
+        pygame.draw.polygon(self.original_image, RED, [(0, 5), (45, 5), (47.5, 0), (50, 5), (47.5, 10), (45, 5), (0, 5)])
+        self.image = pygame.transform.scale(self.original_image, (50, 5))
         self.rect = self.image.get_rect()
         self.player = player
-        self.offset = player.radius * 1.8
+        self.offset = player.radius * 2
         self.repel = 5
 
     def update(self):
@@ -53,6 +53,7 @@ class Knife(pygame.sprite.Sprite):
                     enemy.kill()
                     experience = Experience(enemy)
                     settings.experiences.add(experience)
+                    
 
     def draw(self, screen):
         """Draw the knife on the screen."""

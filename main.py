@@ -36,6 +36,8 @@ class Text:
 def draw_bar(surf, BAR_LENGTH, BAR_HEIGHT, color, outline_color, amount, max_value, x, y):
     if amount < 0:
         amount = 0
+    if amount > max_value:
+        amount = max_value
     fill = (amount/max_value)*BAR_LENGTH
     outline_rect = pygame.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)
     fill_rect = pygame.Rect(x, y, fill, BAR_HEIGHT)
@@ -46,7 +48,7 @@ def draw_bar(surf, BAR_LENGTH, BAR_HEIGHT, color, outline_color, amount, max_val
 # 需要一個精靈跟一個類別，如果在群組中除了自己以外的東西碰到自己，這個精靈會有彈開的動作。
 def avoid_overlap(sprite, group):
         for other_sprite in group:
-            if other_sprite != sprite and sprite.rect.colliderect(other_sprite.rect):
+            if other_sprite != sprite and pygame.sprite.collide_circle(sprite, other_sprite):
                 if sprite.rect.centerx < other_sprite.rect.centerx:
                     sprite.rect.x -= 1
                 else:
@@ -55,6 +57,7 @@ def avoid_overlap(sprite, group):
                     sprite.rect.y -= 1
                 else:
                     sprite.rect.y += 1
+
 
 # 主畫面迴圈
 def main_menu():
@@ -80,6 +83,10 @@ def main_menu():
         # 更新畫面
         pygame.display.update()
 
+# 設置定時器來控制事件產生
+TIMER_EVENT_ID = pygame.USEREVENT + 1
+pygame.time.set_timer(TIMER_EVENT_ID, 10000)
+
 # 遊戲畫面迴圈
 def game_screen():
     settings.game_init()
@@ -101,6 +108,12 @@ def game_screen():
                 # 玩家攻擊
                 settings.player.attack(settings.enemies)
                 print("hit!")
+            elif event.type == TIMER_EVENT_ID:
+                # 先判斷敵人數量是不是超過30
+                if len(settings.enemies) < 30:
+                    # 每10秒就生成一個敵人
+                    enemy = settings.Minion()
+                    settings.enemies.add(enemy)
         
         # 更新遊戲
         settings.all_sprites.update()
@@ -119,7 +132,7 @@ def game_screen():
 
         # 敵人碰到玩家要扣血(敵人加攻擊力屬性)
         for enemy in settings.enemies:
-            if pygame.sprite.collide_rect(settings.player, enemy):
+            if pygame.sprite.collide_circle(settings.player, enemy):
                 settings.player.health -= enemy.attack_power  # 根據敵人的攻擊力扣血
                 enemy.stayAwayFrom(settings.player)
                 if settings.player.health <= 0:

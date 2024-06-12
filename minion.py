@@ -9,20 +9,23 @@ RED = (255, 0, 0)
 class Minion(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((30, 30))
-        self.image.fill(RED)
+        self.image = pygame.Surface((50, 50), pygame.SRCALPHA)
         self.rect = self.image.get_rect()
-        if random.random() > 0.5:
+        if random.random() < 0.33:
             self.rect.centerx = random.choice([0, settings.WINDOW_WIDTH])
             self.rect.centery = random.randrange(0,settings.WINDOW_HEIGHT)
-        else:
+        elif random.random() < 0.67:
             self.rect.centerx = random.randrange(0,settings.WINDOW_WIDTH)
             self.rect.centery = random.choice([0, settings.WINDOW_HEIGHT])
+        else:
+            self.rect.centerx = random.randrange(0,settings.WINDOW_WIDTH)
+            self.rect.centery = random.randrange(0,settings.WINDOW_HEIGHT)
 
-        self.radius = 30
+        self.radius = 25
         self.velocity = 1
         self.health = 50
         self.attack_power = 10
+        pygame.draw.circle(self.image, settings.RED, (self.rect.width // 2, self.rect.height // 2), self.radius, 0) 
 
     def update(self, player):
         dx = player.rect.centerx - self.rect.centerx
@@ -54,4 +57,7 @@ class Minion(pygame.sprite.Sprite):
             dist = max(1, (dx ** 2 + dy ** 2) ** 0.5)
             self.rect.x += dx / dist * 20  # 调整反弹力度
             self.rect.y += dy / dist * 20  # 调整反弹力度
-
+    
+    def draw(self, screen):
+        """Draw the experience on the screen."""
+        screen.blit(self.image, self.rect)
