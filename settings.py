@@ -21,7 +21,8 @@ WINDOW_HEIGHT = 720
 WINDOW_SIZE = (WINDOW_WIDTH, WINDOW_HEIGHT)
 FPS = 60
 
-
+# 用來讓pause回到game時不要刷新的變數
+first_in = True
 
 # 用來存放所有的精靈類別(角色、敵人)
 all_sprites = pygame.sprite.Group()

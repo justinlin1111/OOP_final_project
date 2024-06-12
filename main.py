@@ -61,6 +61,7 @@ def avoid_overlap(sprite, group):
 
 # 主畫面迴圈
 def main_menu():
+    settings.first_in = True
     while True:
         clock.tick(settings.FPS)
         # 處理事件
@@ -72,6 +73,8 @@ def main_menu():
                 if start_button.rect.collidepoint(pygame.mouse.get_pos()):
                     # 切換到遊戲畫面
                     return "game"
+                elif description_button.rect.collidepoint(pygame.mouse.get_pos()):
+                    return "description"
         
         # 繪製背景
         screen.fill(settings.WHITE)
@@ -79,7 +82,41 @@ def main_menu():
         # 創建並繪製按鈕
         start_button = Text("START", 50, (settings.WINDOW_WIDTH/2, settings.WINDOW_HEIGHT/2), settings.BLACK)
         start_button.draw(screen)
+
+        description_button = Text("DESCRIPTION", 40, (settings.WINDOW_WIDTH/2, settings.WINDOW_HEIGHT/2 + 70), settings.BLACK)
+        description_button.draw(screen)
         
+        # 更新畫面
+        pygame.display.update()
+
+# 遊戲描述畫面
+def game_description():
+    while True:
+        clock.tick(settings.FPS)
+        # 處理事件
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if back_to_main.rect.collidepoint(pygame.mouse.get_pos()):
+                    return "main_menu"
+        
+        screen.fill(settings.BLACK)
+
+        back_to_main = Text("Back", 50, (settings.WINDOW_WIDTH/12, settings.WINDOW_HEIGHT/12), settings.WHITE)
+        back_to_main.draw(screen)
+        descriptions = []
+        descriptions.append(Text(" \"W\" , \"A\" , \"S\" , \"D\" 來實現移動，點擊滑鼠攻擊", 50, (settings.WINDOW_WIDTH/2, 100), settings.WHITE))
+        descriptions.append(Text("右上方為血量 下方為經驗值及等級", 50, (settings.WINDOW_WIDTH/2, 150), settings.WHITE))
+        descriptions.append(Text("敵人會隨著擊敗的次數變得更強", 50, (settings.WINDOW_WIDTH/2, 200), settings.WHITE))
+        descriptions.append(Text("強度用顏色來初步區分，由紅到紫依序從弱到強", 50, (settings.WINDOW_WIDTH/2, 250), settings.WHITE))
+        descriptions.append(Text("遊戲中點擊鍵盤的esc鍵可以暫停", 50, (settings.WINDOW_WIDTH/2, 250), settings.WHITE))
+        
+        
+        for description in descriptions:
+            description.draw(screen)
+
         # 更新畫面
         pygame.display.update()
 
@@ -89,7 +126,8 @@ pygame.time.set_timer(TIMER_EVENT_ID, 10000)
 
 # 遊戲畫面迴圈
 def game_screen():
-    settings.game_init()
+    if settings.first_in:
+        settings.game_init()
 
     while True:
         # 設置遊戲的FPS
@@ -102,11 +140,11 @@ def game_screen():
             elif event.type == pygame.KEYDOWN:
                 # 遊戲畫面點esc會回到主畫面
                 if event.key == pygame.K_ESCAPE:
-                    return "main_menu"
+                    return "pause"
                 # 點一下滑鼠要執行攻擊
-                elif event.key == pygame.K_SPACE:
-                    # 玩家攻擊
-                    settings.player.attack(settings.enemies)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                # 玩家攻擊
+                settings.player.attack(settings.enemies)
             elif event.type == TIMER_EVENT_ID:
                 # 先判斷敵人數量是不是超過30
                 if len(settings.enemies) < 30:
@@ -145,8 +183,8 @@ def game_screen():
         settings.enemies.draw(screen)
         settings.weapons.draw(screen)
         settings.experiences.draw(screen)
+
         # 畫血條出來(此函式在main裡)
-        
         draw_bar(screen, 
                  100, 
                  10, 
@@ -167,6 +205,28 @@ def game_screen():
                  settings.WINDOW_HEIGHT - 20)
         pygame.display.update()
 
+def pause():
+    settings.first_in = False
+    while True:
+        # 限制FPS
+        clock.tick(settings.FPS)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if back_to_game.rect.collidepoint(pygame.mouse.get_pos()):
+                    return "game"
+            
+            screen.fill(settings.BLACK)
+
+            back_to_game = Text("Continue", 50, (settings.WINDOW_WIDTH/2, settings.WINDOW_HEIGHT*2/3), settings.WHITE)
+            back_to_game.draw(screen)
+            
+            # 更新畫面
+            pygame.display.update()      
+                
 # 主迴圈
 if __name__ == "__main__":
     current_screen = "main_menu"
@@ -175,3 +235,7 @@ if __name__ == "__main__":
             current_screen = main_menu()
         elif current_screen == "game":
             current_screen = game_screen()
+        elif current_screen == "description":
+            current_screen = game_description()
+        elif current_screen == "pause":
+            current_screen = pause()
