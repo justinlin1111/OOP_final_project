@@ -20,6 +20,7 @@ class Player(pygame.sprite.Sprite):
         self.experience = 0
         self.level = 1
         self.needed_experience = 50
+
         pygame.draw.circle(self.image, settings.BLUE, (self.rect.width // 2, self.rect.height // 2), self.radius, 0) 
     
     def update(self):

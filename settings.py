@@ -1,3 +1,4 @@
+import os
 import pygame
 from player import Player
 from minion import Minion
@@ -27,6 +28,11 @@ first_in = True
 # 用來重設clone的刷新時間
 clone_refresh_time = 0
 clone_created = False
+score = 0
+
+# 儲存音效
+pygame.mixer.init()
+knife_sound = pygame.mixer.Sound(os.path.join("sound", "knife_no_hit.mp3"))
 
 # 用來存放所有的精靈類別(角色、敵人)
 all_sprites = pygame.sprite.Group()
@@ -52,6 +58,7 @@ def game_init():
     experiences.empty()
 
     # 初始化
+    score = int(0)
     player.__init__()
     all_sprites.add(player)
     for _ in range(10):

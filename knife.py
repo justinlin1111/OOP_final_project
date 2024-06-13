@@ -41,6 +41,12 @@ class Knife(pygame.sprite.Sprite):
     # 在敵人死亡時會生成經驗值
     def attack(self, enemies):
         """刀子攻擊敵人"""
+        sound_play = False
+        # 播放揮刀聲
+        if not sound_play:
+            settings.knife_sound.play()
+            sound_play = True
+
         for enemy in enemies:
             if pygame.sprite.collide_rect(self, enemy):
                 enemy.health -= self.player.attack_power
@@ -50,13 +56,17 @@ class Knife(pygame.sprite.Sprite):
                     experience = Experience(enemy)
                     settings.experiences.add(experience)
                     # 升一等，在升一等的同時會重製它的位置
-                    if isinstance(enemy, settings.Minion) or isinstance(enemy, settings.Boss):
+                    if isinstance(enemy, settings.Minion):
+                        settings.score += 10 * enemy.level
+                        enemy.level_up()
+                    elif isinstance(enemy, settings.Boss):
+                        settings.score += 30 * enemy.level
                         enemy.level_up()
                     elif isinstance(enemy, settings.clone):
+                        settings.score += 100 * enemy.level
                         enemy.kill()
                         settings.clone_refresh_time = pygame.time.get_ticks()
                         settings.clone_created = False
-
 
     def draw(self, screen):
         """Draw the knife on the screen."""

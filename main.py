@@ -14,10 +14,11 @@ clock = pygame.time.Clock()
 
 # 載入圖像
 background_image = pygame.image.load("background.png")
+background_image = pygame.transform.scale(background_image, (settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT - 20))
 
 # 載入音樂
 pygame.mixer.music.load(os.path.join("sound", "never_give_up.mp3"))
-pygame.mixer.music.set_volume(0.4)
+pygame.mixer.music.set_volume(0.3)
 
 # 定義文字類
 class Text:
@@ -91,6 +92,9 @@ def main_menu():
         start_button.draw(screen)
 
         description_button = Text("DESCRIPTION", 40, (settings.WINDOW_WIDTH/2, settings.WINDOW_HEIGHT/2 + 70), settings.BLACK)
+        description_button.draw(screen)
+
+        description_button = Text(f"LAST SCORE : {settings.score}", 40, (settings.WINDOW_WIDTH/2, settings.WINDOW_HEIGHT/2 - 140), settings.BLACK)
         description_button.draw(screen)
         
         # 更新畫面
@@ -179,8 +183,8 @@ def game_screen():
         settings.experiences.update()
 
         # 寫上玩家的資訊
-        player_level = Text(f"LEVEL : {settings.player.level}", 20, (settings.WINDOW_WIDTH - 80, 30), settings.BLACK)
-        player_attack_power = Text(f"ATTACK : {settings.player.attack_power}", 20, (settings.WINDOW_WIDTH - 80, 60), settings.BLACK)
+        player_level = Text(f"LEVEL : {settings.player.level}", 20, (settings.WINDOW_WIDTH - 80, 30), settings.WHITE)
+        player_attack_power = Text(f"ATTACK : {settings.player.attack_power}", 20, (settings.WINDOW_WIDTH - 80, 60), settings.WHITE)
         player_experiece = Text(f"{int(settings.player.experience)} / {settings.player.needed_experience}", 20, (settings.WINDOW_WIDTH/2, settings.WINDOW_HEIGHT - 10), settings.BLACK)
         player_health = Text(f"{settings.player.health} / {settings.player.max_health}", 20, (150, 20), settings.WHITE)
 
@@ -214,6 +218,8 @@ def game_screen():
         # 畫血條出來(此函式在main裡)
         draw_bar(screen, 100, 10, settings.GREEN, settings.WHITE, settings.player.health, settings.player.max_health, 5, 15)
         draw_bar(screen, settings.WINDOW_WIDTH, 20, settings.YELLOW, settings.BLACK, settings.player.experience, settings.player.needed_experience, 0, settings.WINDOW_HEIGHT - 20)
+        score = Text(f"SCORE : {settings.score}", 50, (settings.WINDOW_WIDTH/2, 30), settings.WHITE)
+        score.draw(screen)
         player_level.draw(screen)
         player_attack_power.draw(screen)
         player_experiece.draw(screen)
@@ -238,6 +244,9 @@ def pause():
 
             back_to_game = Text("Continue", 50, (settings.WINDOW_WIDTH/2, settings.WINDOW_HEIGHT*2/3), settings.WHITE)
             back_to_game.draw(screen)
+
+            description_button = Text(f"LAST SCORE : {settings.score}", 40, (settings.WINDOW_WIDTH/2, settings.WINDOW_HEIGHT/2 - 140), settings.BLACK)
+            description_button.draw(screen)
             
             # 更新畫面
             pygame.display.update()      
