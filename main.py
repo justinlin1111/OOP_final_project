@@ -94,8 +94,8 @@ def main_menu():
         description_button = Text("DESCRIPTION", 40, (settings.WINDOW_WIDTH/2, settings.WINDOW_HEIGHT/2 + 70), settings.BLACK)
         description_button.draw(screen)
 
-        description_button = Text(f"LAST SCORE : {settings.score}", 40, (settings.WINDOW_WIDTH/2, settings.WINDOW_HEIGHT/2 - 140), settings.BLACK)
-        description_button.draw(screen)
+        last_score = Text(f"LAST SCORE : {settings.score}", 40, (settings.WINDOW_WIDTH/2, settings.WINDOW_HEIGHT/2 - 140), settings.BLACK)
+        last_score.draw(screen)
         
         # 更新畫面
         pygame.display.update()
