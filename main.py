@@ -1,9 +1,11 @@
+import os
 import pygame
 import sys
 import settings
 
 # 初始化 Pygame
 pygame.init()
+pygame.mixer.init()
 
 # 創建視窗
 screen = pygame.display.set_mode(settings.WINDOW_SIZE)
@@ -12,6 +14,10 @@ clock = pygame.time.Clock()
 
 # 載入圖像
 background_image = pygame.image.load("background.png")
+
+# 載入音樂
+pygame.mixer.music.load(os.path.join("sound", "never_give_up.mp3"))
+pygame.mixer.music.set_volume(0.4)
 
 # 定義文字類
 class Text:
@@ -58,6 +64,7 @@ def avoid_overlap(sprite, group):
             else:
                 sprite.rect.y += 1
 
+pygame.mixer.music.play(-1)
 
 # 主畫面迴圈
 def main_menu():
@@ -107,11 +114,13 @@ def game_description():
         back_to_main = Text("Back", 50, (settings.WINDOW_WIDTH/12, settings.WINDOW_HEIGHT/12), settings.WHITE)
         back_to_main.draw(screen)
         descriptions = []
-        descriptions.append(Text(" \"W\" , \"A\" , \"S\" , \"D\" 來實現移動，點擊滑鼠攻擊", 50, (settings.WINDOW_WIDTH/2, 100), settings.WHITE))
-        descriptions.append(Text("右上方為血量 下方為經驗值及等級", 50, (settings.WINDOW_WIDTH/2, 150), settings.WHITE))
-        descriptions.append(Text("敵人會隨著擊敗的次數變得更強", 50, (settings.WINDOW_WIDTH/2, 200), settings.WHITE))
-        descriptions.append(Text("強度用顏色來初步區分，由紅到紫依序從弱到強", 50, (settings.WINDOW_WIDTH/2, 250), settings.WHITE))
-        descriptions.append(Text("遊戲中點擊鍵盤的esc鍵可以暫停", 50, (settings.WINDOW_WIDTH/2, 250), settings.WHITE))
+        descriptions.append(Text(" \"W\" , \"A\" , \"S\" , \"D\" to move, click the mouse to attack", 50, (settings.WINDOW_WIDTH/2, 100), settings.WHITE))
+        descriptions.append(Text("The upper right is the blood volume,", 50, (settings.WINDOW_WIDTH/2, 175), settings.WHITE))
+        descriptions.append(Text("and the lower right is the experience value and level.", 50, (settings.WINDOW_WIDTH/2, 250), settings.WHITE))
+        descriptions.append(Text("Enemies become stronger the more times they are defeated", 50, (settings.WINDOW_WIDTH/2, 425), settings.WHITE))
+        descriptions.append(Text("Intensity is initially distinguished by color", 50, (settings.WINDOW_WIDTH/2, 500), settings.WHITE))
+        descriptions.append(Text("from weak to strong from red to purple.", 50, (settings.WINDOW_WIDTH/2, 550), settings.WHITE))
+        descriptions.append(Text("Click the esc key on the keyboard to pause the game", 50, (settings.WINDOW_WIDTH/2, 600), settings.WHITE))
         
         
         for description in descriptions:
