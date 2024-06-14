@@ -14,7 +14,9 @@ clock = pygame.time.Clock()
 
 # 載入圖像
 background_image = pygame.image.load("background.png")
-background_image = pygame.transform.scale(background_image, (settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT - 20))
+background_image = pygame.transform.scale(background_image, 
+                                          (settings.WINDOW_WIDTH, 
+                                           settings.WINDOW_HEIGHT - 20))
 
 # 載入音樂
 pygame.mixer.music.load(os.path.join("sound", "never_give_up.mp3"))
@@ -94,7 +96,7 @@ def main_menu():
         description_button = Text("DESCRIPTION", 40, (settings.WINDOW_WIDTH/2, settings.WINDOW_HEIGHT/2 + 70), settings.BLACK)
         description_button.draw(screen)
 
-        last_score = Text(f"LAST SCORE : {settings.score}", 40, (settings.WINDOW_WIDTH/2, settings.WINDOW_HEIGHT/2 - 140), settings.BLACK)
+        last_score = Text(f"LAST SCORE : {int(settings.score)}", 40, (settings.WINDOW_WIDTH/2, settings.WINDOW_HEIGHT/2 - 140), settings.BLACK)
         last_score.draw(screen)
         
         # 更新畫面
@@ -204,6 +206,7 @@ def game_screen():
                 settings.player.health -= enemy.attack_power  # 根據敵人的攻擊力扣血
                 enemy.stayAwayFrom(settings.player)
                 if settings.player.health <= 0:
+                    settings.score += (pygame.time.get_ticks() - start_time) / 100
                     print("Player is dead!")
                     return "main_menu"
 
@@ -218,7 +221,7 @@ def game_screen():
         # 畫血條出來(此函式在main裡)
         draw_bar(screen, 100, 10, settings.GREEN, settings.WHITE, settings.player.health, settings.player.max_health, 5, 15)
         draw_bar(screen, settings.WINDOW_WIDTH, 20, settings.YELLOW, settings.BLACK, settings.player.experience, settings.player.needed_experience, 0, settings.WINDOW_HEIGHT - 20)
-        score = Text(f"SCORE : {settings.score}", 50, (settings.WINDOW_WIDTH/2, 30), settings.WHITE)
+        score = Text(f"SCORE BY ENEMIES: {settings.score}", 50, (settings.WINDOW_WIDTH/2, 30), settings.WHITE)
         score.draw(screen)
         player_level.draw(screen)
         player_attack_power.draw(screen)

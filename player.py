@@ -12,9 +12,9 @@ class Player(pygame.sprite.Sprite):
         self.rect.centery = settings.WINDOW_HEIGHT / 2
         self.radius = 30
         self.velocity = 3
-        self.health = 10000
-        self.max_health = 10000
-        self.attack_power = 1000
+        self.health = 100
+        self.max_health = 100
+        self.attack_power = 10
         self.isattack = False
 
         self.experience = 0
